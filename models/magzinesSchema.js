@@ -27,9 +27,28 @@ const magzinesSchema = new Schema({
         type:Boolean,
         default:true,
     },
+    category:{
+        type:String,
+        default:'other',
+    },
+    downloads:{
+        type:Number,
+        default:0,
+    },
     description:{
         type:String,
     },
+    rating:{
+        type:Number,
+        default:0,
+    },
+    reviews:[
+        {
+            type:String,
+            time:Date.now(),
+            userId:Number,
+        },
+    ],
     createdAt:{
         type:Date,
     
