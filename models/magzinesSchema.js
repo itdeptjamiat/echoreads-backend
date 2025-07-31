@@ -23,6 +23,10 @@ const magzinesSchema = new Schema({
         enum:['free','pro'],
         default:'free',
     },
+    fileType:{
+        type:String,
+        default:'pdf',
+    },
     isActive:{
         type:Boolean,
         default:true,

@@ -19,7 +19,8 @@ const createMid = async () => {
 const createMagzine = async (req, res) => {
     try {
         // Validate input
-        const { name, image, file, type } = req.body;
+        const { name, image, file, type, fileType = 'pdf', category = 'other', description = '' } = req.body;
+        
         if (!name || !image || !file || !type) {
             return res.status(400).json({ message: 'Missing required fields: name, image, file, or type.' });
         }
@@ -33,12 +34,31 @@ const createMagzine = async (req, res) => {
         // Generate a new unique mid
         const newMid = await createMid();
 
-        const magzine = new Magzines({ mid: newMid, name, image, file, type });
+        // Create new magazine with all fields from schema
+        const magzine = new Magzines({
+            mid: newMid,
+            name,
+            image,
+            file,
+            type,
+            fileType,
+            category,
+            description,
+            isActive: true,
+            downloads: 0,
+            rating: 0,
+            reviews: [],
+            createdAt: new Date()
+        });
+
         await magzine.save();
-        res.status(201).json({ message: 'Magzine created successfully', mid: newMid });
+        res.status(201).json({ 
+            message: 'Magazine created successfully', 
+            magazine: magzine 
+        });
 
     } catch (error) {
-        console.error("Error creating magzine:", error); // Use console.error for errors
+        console.error("Error creating magazine:", error);
         // Check for specific Mongoose validation errors
         if (error.name === 'ValidationError') {
             return res.status(400).json({ message: error.message });
@@ -46,6 +66,5 @@ const createMagzine = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-
 
 module.exports = createMagzine;
