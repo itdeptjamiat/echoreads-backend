@@ -27,6 +27,11 @@ const magzinesSchema = new Schema({
         type:String,
         default:'pdf',
     },
+    magzineType:{
+        type:String,
+        enum:['magzine','article','digest '],
+        default:'magzine',
+    },
     isActive:{
         type:Boolean,
         default:true,

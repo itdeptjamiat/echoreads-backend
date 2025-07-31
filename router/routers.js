@@ -11,6 +11,12 @@ const getAllMagzines = require('../magzinesFiles/getAllmagzin');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 
+// Plan management imports
+const createPlan = require('../planPrices/createPlan');
+const getAllPlans = require('../planPrices/getAllPlans');
+const updatePlan = require('../admin/updatePlan');
+const deletePlan = require('../admin/deletePlan');
+
 // account login
 router.post('/api/v1/user/signup',signup);
 router.post('/api/v1/user/login',login);
@@ -33,6 +39,12 @@ router.get('/api/v1/user/magzines',getAllMagzines);
 
 
 
+
+// Plan management routes
+router.get('/api/v1/plans', getAllPlans); // Public route to get all plans
+router.post('/api/v1/admin/plan/create', verifyAdmin, createPlan);
+router.put('/api/v1/admin/plan/update', verifyAdmin, updatePlan);
+router.delete('/api/v1/admin/plan/delete', verifyAdmin, deletePlan);
 
 // Get all users (admin only)
 router.get('/api/v1/admin/users', verifyAdmin, getAllUsers);
