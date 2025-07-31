@@ -17,6 +17,9 @@ const getAllPlans = require('../planPrices/getAllPlans');
 const updatePlan = require('../admin/updatePlan');
 const deletePlan = require('../admin/deletePlan');
 
+// Admin user management
+const deleteUser = require('../admin/deleteUser');
+
 // account login
 router.post('/api/v1/user/signup',signup);
 router.post('/api/v1/user/login',login);
@@ -48,6 +51,8 @@ router.delete('/api/v1/admin/plan/delete', verifyAdmin, deletePlan);
 
 // Get all users (admin only)
 router.get('/api/v1/admin/users', verifyAdmin, getAllUsers);
+// delete user (admin only)
+router.delete('/api/v1/admin/delete-user', verifyAdmin, deleteUser);
 // change password by admin
 router.post('/api/v1/admin/reset-password',adminResetPassword);
 // create a magzine
