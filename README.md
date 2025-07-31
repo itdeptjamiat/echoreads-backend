@@ -23,9 +23,10 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
 - **Rating & Reviews** - User feedback system
 
 ### Admin Features
-- **User Management** - View all users and manage accounts
+- **User Management** - View all users, manage accounts, and delete users
 - **Content Administration** - Full magazine lifecycle management
 - **Plan Administration** - Complete subscription plan control
+- **Account Security** - Admin password reset and user deletion
 
 ---
 
@@ -138,6 +139,11 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
 
 ### Plan Management
 
+#### Get All Plans
+- **GET** `/api/v1/plans`
+- **Query Parameters:** `?includeInactive=true` (optional)
+- **Response:** Returns all active plans with calculated discounts and features
+
 #### Create Plan
 - **POST** `/api/v1/plan/create`
 - **Headers:** `Authorization: Bearer <admin_jwt_token>`
@@ -195,6 +201,18 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
   }
   ```
 
+#### Delete User (Admin Only)
+- **DELETE** `/api/v1/admin/delete-user`
+- **Headers:** `Authorization: Bearer <admin_jwt_token>`
+- **Body:**  
+  ```json
+  {
+    "targetUid": 123,
+    "adminUid": 456
+  }
+  ```
+- **Security:** Prevents admin self-deletion and admin-to-admin deletion
+
 ---
 
 ## Project Structure
@@ -210,6 +228,7 @@ echoReadsBacken/
 ├── admin/                    # Admin-only operations
 │   ├── getAlluser.js
 │   ├── adminResetPassword.js
+│   ├── deleteUser.js
 │   ├── updateMagzin.js
 │   ├── deleteMagzin.js
 │   ├── updatePlan.js
@@ -218,7 +237,8 @@ echoReadsBacken/
 │   ├── createMagzine.js
 │   └── getAllmagzin.js
 ├── planPrices/              # Subscription plan management
-│   └── createPlan.js
+│   ├── createPlan.js
+│   └── getAllPlans.js
 ├── userProfile/             # User profile operations
 │   └── userProfile.js
 ├── payments/                # Payment processing (future)
