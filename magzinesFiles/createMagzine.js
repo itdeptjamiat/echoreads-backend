@@ -19,7 +19,16 @@ const createMid = async () => {
 const createMagzine = async (req, res) => {
     try {
         // Validate input
-        const { name, image, file, type, fileType = 'pdf', category = 'other', description = '' } = req.body;
+        const { 
+            name, 
+            image, 
+            file, 
+            type, 
+            fileType = 'pdf', 
+            magzineType = 'magzine',
+            category = 'other', 
+            description = '' 
+        } = req.body;
         
         if (!name || !image || !file || !type) {
             return res.status(400).json({ message: 'Missing required fields: name, image, file, or type.' });
@@ -29,6 +38,14 @@ const createMagzine = async (req, res) => {
         const allowedTypes = ['free', 'pro'];
         if (!allowedTypes.includes(type)) {
             return res.status(400).json({ message: 'Invalid type. Type must be either "free" or "pro".' });
+        }
+
+        // Validate that 'magzineType' is one of the allowed values
+        const allowedMagzineTypes = ['magzine', 'article', 'digest'];
+        if (!allowedMagzineTypes.includes(magzineType)) {
+            return res.status(400).json({ 
+                message: 'Invalid magzineType. Must be one of: "magzine", "article", "digest".' 
+            });
         }
 
         // Generate a new unique mid
@@ -42,6 +59,7 @@ const createMagzine = async (req, res) => {
             file,
             type,
             fileType,
+            magzineType,
             category,
             description,
             isActive: true,
