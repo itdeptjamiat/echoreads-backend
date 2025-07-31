@@ -2,43 +2,23 @@ const Account = require('../models/accountCreate');
 
 const deleteUser = async (req, res) => {
     try {
-        const { targetUid, adminUid } = req.body;
+        const { uid } = req.body;
 
-        if (!targetUid) {
-            return res.status(400).json({ message: 'Target User ID (targetUid) is required' });
-        }
-        if (!adminUid) {
-            return res.status(400).json({ message: 'Admin User ID (adminUid) is required' });
-        }
-
-        // Verify admin authorization
-        const admin = await Account.findOne({ uid: adminUid });
-        if (!admin) {
-            return res.status(404).json({ message: 'Admin user not found' });
-        }
-
-        if (admin.userType !== 'admin') {
-            return res.status(403).json({ message: 'You are not authorized to delete users' });
+        if (!uid) {
+            return res.status(400).json({ message: 'User ID (uid) is required' });
         }
 
         // Check if target user exists
-        const targetUser = await Account.findOne({ uid: targetUid });
+        const targetUser = await Account.findOne({ uid });
 
         if (!targetUser) {
-            return res.status(404).json({ message: 'Target user not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
 
-        // Prevent admin from deleting themselves
-        if (targetUid === adminUid) {
-            return res.status(400).json({ 
-                message: 'Admin cannot delete their own account' 
-            });
-        }
-
-        // Prevent deletion of other admin accounts (optional security measure)
+        // Prevent deletion of admin accounts
         if (targetUser.userType === 'admin') {
             return res.status(400).json({ 
-                message: 'Cannot delete another admin account' 
+                message: 'Cannot delete admin accounts' 
             });
         }
 
@@ -52,7 +32,7 @@ const deleteUser = async (req, res) => {
         };
 
         // Delete the user account
-        await Account.deleteOne({ uid: targetUid });
+        await Account.deleteOne({ uid });
 
         return res.status(200).json({ 
             message: 'User deleted successfully',
@@ -68,4 +48,4 @@ const deleteUser = async (req, res) => {
     }
 };
 
-module.exports = deleteUser; 
+module.exports = deleteUser;
