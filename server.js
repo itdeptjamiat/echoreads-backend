@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./dbconnect/databaseConnect');
 const path = require('path');
 const router = require('./router/routers');
+const { startDailyScheduler } = require('./autoPlanManagement/dailyScheduler');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
@@ -21,4 +22,7 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
+  
+  // Start the daily expiry scheduler
+  startDailyScheduler();
 });

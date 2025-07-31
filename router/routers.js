@@ -20,6 +20,21 @@ const deletePlan = require('../admin/deletePlan');
 // Admin user management
 const deleteUser = require('../admin/deleteUser');
 
+// Download management imports
+const downloadMagazine = require('../downloads/downloadMagazine');
+const getDownloadHistory = require('../downloads/getDownloadHistory');
+const getDownloadStats = require('../downloads/getDownloadStats');
+
+// Payment management imports
+const getPaymentHistory = require('../payments/paymentHistory');
+const getRevenueAnalytics = require('../payments/revenueAnalytics');
+
+// Auto plan management imports
+const checkExpiredPlans = require('../autoPlanManagement/checkExpiredPlans');
+const { getExpiryManagement, triggerAutoExpiryCheck, getExpiringSoonUsers } = require('../autoPlanManagement/expiryManagement');
+const triggerAutoExpiry = require('../autoPlanManagement/autoExpiryRoute');
+const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = require('../autoPlanManagement/schedulerRoutes');
+
 // account login
 router.post('/api/v1/user/signup',signup);
 router.post('/api/v1/user/login',login);
@@ -29,19 +44,6 @@ router.get('/api/v1/user/profile/:uid', getUserProfile);
 
 // get all magzines
 router.get('/api/v1/user/magzines',getAllMagzines);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Plan management routes
 router.get('/api/v1/plans', getAllPlans); // Public route to get all plans
@@ -55,6 +57,29 @@ router.get('/api/v1/admin/users', verifyAdmin, getAllUsers);
 router.delete('/api/v1/admin/delete-user', verifyAdmin, deleteUser);
 // change password by admin
 router.post('/api/v1/admin/reset-password',adminResetPassword);
+
+// Download management routes
+router.post('/api/v1/download/magazine', downloadMagazine);
+router.get('/api/v1/download/history/:uid', getDownloadHistory);
+router.post('/api/v1/admin/download-stats', verifyAdmin, getDownloadStats);
+
+// Payment management routes
+router.post('/api/v1/admin/payment-history', verifyAdmin, getPaymentHistory);
+router.post('/api/v1/admin/revenue-analytics', verifyAdmin, getRevenueAnalytics);
+
+// Auto plan management routes (no admin auth required for automatic process)
+router.post('/api/v1/auto/check-expired-plans', triggerAutoExpiry);
+
+// Daily scheduler routes (no auth required for automated processes)
+router.get('/api/v1/scheduler/status', getSchedulerStatusRoute);
+router.post('/api/v1/scheduler/trigger-daily', triggerDailyCheckRoute);
+router.post('/api/v1/scheduler/run-daily', runDailyCheckRoute);
+
+// Admin auto plan management routes
+router.post('/api/v1/admin/check-expired-plans', verifyAdmin, checkExpiredPlans);
+router.post('/api/v1/admin/expiry-management', verifyAdmin, getExpiryManagement);
+router.post('/api/v1/admin/trigger-auto-expiry', verifyAdmin, triggerAutoExpiryCheck);
+router.post('/api/v1/admin/expiring-soon', verifyAdmin, getExpiringSoonUsers);
 // create a magzine
 router.post('/api/v1/admin/create-magzine',createMagzine);
 router.delete('/api/v1/admin/delete-magzine',deleteMagazin);

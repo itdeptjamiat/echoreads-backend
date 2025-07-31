@@ -13,7 +13,7 @@ echoReadsBacken/
 ├── 📁 models/                      # Database Schemas
 ├── 📁 router/                      # API Route Definitions
 ├── 📁 dbconnect/                   # Database Connection
-├── 📁 payments/                    # Payment Processing (Future)
+├── 📁 payments/                    # Payment Processing
 ├── 📄 server.js                    # Main Server Entry Point
 ├── 📄 package.json                 # Project Dependencies
 ├── 📄 package-lock.json           # Dependency Lock File
@@ -53,6 +53,7 @@ accounts/
 admin/
 ├── 📄 getAlluser.js               # Get all registered users
 ├── 📄 adminResetPassword.js       # Admin password reset for users
+├── 📄 deleteUser.js               # Delete user accounts
 ├── 📄 updateMagzin.js             # Update magazine details
 ├── 📄 deleteMagzin.js             # Delete magazines
 ├── 📄 updatePlan.js               # Update subscription plans
@@ -64,6 +65,8 @@ admin/
 - **User management**
 - **Content administration**
 - **Plan management**
+- **Payment analytics**
+- **Download statistics**
 
 ---
 
@@ -82,6 +85,26 @@ magzinesFiles/
 - **Content categorization**
 - **Download tracking**
 - **Rating and review system**
+
+---
+
+## 📥 Download Management (`/downloads/`)
+
+### Purpose: Handle magazine downloads with access control
+
+```
+downloads/
+├── 📄 downloadMagazine.js         # Download with plan validation
+├── 📄 getDownloadHistory.js       # User download history
+└── 📄 getDownloadStats.js         # Admin download analytics
+```
+
+### Key Features:
+- **Plan-based access control**
+- **Download tracking and analytics**
+- **User download history**
+- **Admin download statistics**
+- **Subscription expiry validation**
 
 ---
 
@@ -200,8 +223,18 @@ router/
 - `PUT /api/v1/admin/plan/update` - Update plan (admin)
 - `DELETE /api/v1/admin/plan/delete` - Delete plan (admin)
 
+#### Download Management Routes:
+- `POST /api/v1/download/magazine` - Download magazine (with access control)
+- `GET /api/v1/download/history/:uid` - Get user download history
+- `POST /api/v1/admin/download-stats` - Get download statistics (admin)
+
+#### Payment Management Routes:
+- `POST /api/v1/admin/payment-history` - Get payment history (admin)
+- `POST /api/v1/admin/revenue-analytics` - Get revenue analytics (admin)
+
 #### Admin Routes:
 - `GET /api/v1/admin/users` - Get all users
+- `DELETE /api/v1/admin/delete-user` - Delete user (admin)
 - `POST /api/v1/admin/reset-password` - Admin password reset
 
 ---
@@ -224,18 +257,20 @@ dbconnect/
 
 ## 💰 Payment Processing (`/payments/`)
 
-### Purpose: Future payment integration (currently empty)
+### Purpose: Payment history, revenue tracking, and analytics
 
 ```
 payments/
-└── (Future payment processing files)
+├── 📄 paymentHistory.js      # Payment history and user list
+└── 📄 revenueAnalytics.js    # Detailed revenue analytics
 ```
 
-### Planned Features:
-- **Payment gateway integration**
-- **Subscription billing**
-- **Payment verification**
-- **Refund processing**
+### Key Features:
+- **Payment History** - Track all user payments and revenue
+- **Revenue Analytics** - Monthly trends and growth metrics
+- **User List** - Complete list of paying customers
+- **Plan Performance** - Revenue by plan type analysis
+- **Business Insights** - Growth trends and recommendations
 
 ---
 

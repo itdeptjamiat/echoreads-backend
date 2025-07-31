@@ -27,6 +27,8 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
 - **Content Administration** - Full magazine lifecycle management
 - **Plan Administration** - Complete subscription plan control
 - **Account Security** - Admin password reset and user deletion
+- **Payment Analytics** - Revenue tracking and payment history
+- **Download Statistics** - Magazine download analytics
 
 ---
 
@@ -184,6 +186,35 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
   }
   ```
 
+### Download Management
+
+#### Download Magazine
+- **POST** `/api/v1/download/magazine`
+- **Body:**  
+  ```json
+  {
+    "mid": 123,
+    "uid": 456
+  }
+  ```
+- **Access Control:** Based on user plan (free/pro users)
+- **Response:** Download link and magazine details
+
+#### Get Download History
+- **GET** `/api/v1/download/history/:uid`
+- **Response:** User's accessible magazines and plan limits
+
+#### Get Download Statistics (Admin)
+- **POST** `/api/v1/admin/download-stats`
+- **Headers:** `Authorization: Bearer <admin_jwt_token>`
+- **Body:**  
+  ```json
+  {
+    "adminUid": 123
+  }
+  ```
+- **Response:** Comprehensive download analytics
+
 ### Admin
 
 #### Get All Users
@@ -213,6 +244,29 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
   ```
 - **Security:** Prevents admin self-deletion and admin-to-admin deletion
 
+#### Payment History (Admin Only)
+- **POST** `/api/v1/admin/payment-history`
+- **Headers:** `Authorization: Bearer <admin_jwt_token>`
+- **Body:**  
+  ```json
+  {
+    "adminUid": 123
+  }
+  ```
+- **Response:** Total revenue, user list, and subscription statistics
+
+#### Revenue Analytics (Admin Only)
+- **POST** `/api/v1/admin/revenue-analytics`
+- **Headers:** `Authorization: Bearer <admin_jwt_token>`
+- **Body:**  
+  ```json
+  {
+    "adminUid": 123,
+    "period": "all"
+  }
+  ```
+- **Response:** Detailed revenue trends, growth metrics, and business insights
+
 ---
 
 ## Project Structure
@@ -239,9 +293,15 @@ echoReadsBacken/
 ├── planPrices/              # Subscription plan management
 │   ├── createPlan.js
 │   └── getAllPlans.js
+├── downloads/               # Download management
+│   ├── downloadMagazine.js
+│   ├── getDownloadHistory.js
+│   └── getDownloadStats.js
 ├── userProfile/             # User profile operations
 │   └── userProfile.js
-├── payments/                # Payment processing (future)
+├── payments/                # Payment processing
+│   ├── paymentHistory.js
+│   └── revenueAnalytics.js
 ├── middleware/              # Authentication middleware
 │   └── auth.js
 ├── models/                  # Database schemas
