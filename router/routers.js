@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const signup = require('../accounts/signup');
 const login = require('../accounts/login');
+const requestPasswordReset = require('../accounts/requestPasswordReset');
+const { verifyOtp, resendOtp } = require('../accounts/verifyOtp');
+const { resetPasswordWithToken, checkResetToken } = require('../accounts/resetPasswordWithToken');
 const getAllUsers = require('../admin/getAlluser');
 const verifyAdmin = require('../middleware/auth');
 const getUserProfile = require('../userProfile/userProfile');
@@ -28,6 +31,10 @@ const getDownloadStats = require('../downloads/getDownloadStats');
 // Payment management imports
 const getPaymentHistory = require('../payments/paymentHistory');
 const getRevenueAnalytics = require('../payments/revenueAnalytics');
+const createPayment = require('../payments/createPayment');
+const getUserPayments = require('../payments/getUserPayments');
+const refundPayment = require('../payments/refundPayment');
+const handlePaymentWebhook = require('../payments/paymentWebhook');
 
 // Auto plan management imports
 const checkExpiredPlans = require('../autoPlanManagement/checkExpiredPlans');
@@ -38,6 +45,13 @@ const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = 
 // account login
 router.post('/api/v1/user/signup',signup);
 router.post('/api/v1/user/login',login);
+
+// Password reset flow
+router.post('/api/v1/user/request-password-reset', requestPasswordReset);
+router.post('/api/v1/user/verify-otp', verifyOtp);
+router.post('/api/v1/user/resend-otp', resendOtp);
+router.post('/api/v1/user/check-reset-token', checkResetToken);
+router.post('/api/v1/user/reset-password', resetPasswordWithToken);
 
 // user profile
 router.get('/api/v1/user/profile/:uid', getUserProfile);
@@ -66,6 +80,16 @@ router.post('/api/v1/admin/download-stats', verifyAdmin, getDownloadStats);
 // Payment management routes
 router.post('/api/v1/admin/payment-history', verifyAdmin, getPaymentHistory);
 router.post('/api/v1/admin/revenue-analytics', verifyAdmin, getRevenueAnalytics);
+
+// User payment routes
+router.post('/api/v1/payment/create', createPayment);
+router.get('/api/v1/payment/user/:userId', getUserPayments);
+
+// Admin payment management routes
+router.post('/api/v1/admin/payment/refund', verifyAdmin, refundPayment);
+
+// Payment webhook routes (no auth required for webhooks)
+router.post('/api/v1/payment/webhook/:provider', handlePaymentWebhook);
 
 // Auto plan management routes (no admin auth required for automatic process)
 router.post('/api/v1/auto/check-expired-plans', triggerAutoExpiry);
