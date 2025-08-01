@@ -29,7 +29,7 @@ const magzinesSchema = new Schema({
     },
     magzineType:{
         type:String,
-        enum:['magzine','article','digest '],
+        enum:['magzine','article','digest'],
         default:'magzine',
     },
     isActive:{

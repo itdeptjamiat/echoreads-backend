@@ -11,6 +11,7 @@ const getUserProfile = require('../userProfile/userProfile');
 const adminResetPassword = require('../admin/adminResetPassword');
 const createMagzine = require('../magzinesFiles/createMagzine');
 const getAllMagzines = require('../magzinesFiles/getAllmagzin');
+const getMagzineByMid = require('../magzinesFiles/getMagzineByMid');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 
@@ -58,6 +59,8 @@ router.get('/api/v1/user/profile/:uid', getUserProfile);
 
 // get all magzines
 router.get('/api/v1/user/magzines',getAllMagzines);
+// get magazine by mid
+router.get('/api/v1/user/magzines/:mid',getMagzineByMid);
 
 // Plan management routes
 router.get('/api/v1/plans', getAllPlans); // Public route to get all plans
