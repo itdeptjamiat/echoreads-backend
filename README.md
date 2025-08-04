@@ -78,6 +78,18 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
   }
   ```
 
+#### Set New Password After OTP Verification
+- **POST** `/api/v1/user/set-new-password-after-otp`
+- **Body:**  
+  ```json
+  {
+    "email": "user@example.com",
+    "otp": "123456",
+    "newPassword": "yourNewPassword",
+    "confirmPassword": "yourNewPassword"
+  }
+  ```
+
 ### User Profile
 
 #### Update User Data

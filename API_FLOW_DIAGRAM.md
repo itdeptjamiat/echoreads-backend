@@ -129,7 +129,65 @@ sequenceDiagram
     S-->>A: {success: true, refund: {...}}
 ```
 
-### 5. Plan Management Flow
+### 5. Password Reset Flow
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    participant D as Database
+    participant E as Email Service
+
+    C->>S: POST /api/v1/user/request-password-reset
+    Note over C,S: {email: "user@example.com"}
+    S->>D: Find user by email
+    D-->>S: User found
+    S->>S: Generate OTP
+    S->>D: Save OTP and expiry
+    S->>E: Send OTP email
+    E-->>S: Email sent
+    S-->>C: {success: true, message: "OTP sent"}
+
+    C->>S: POST /api/v1/user/verify-otp
+    Note over C,S: {email: "user@example.com", otp: "123456"}
+    S->>D: Verify OTP
+    D-->>S: OTP valid
+    S->>S: Generate reset token
+    S->>D: Save reset token
+    S-->>C: {success: true, resetToken: "abc123"}
+
+    C->>S: POST /api/v1/user/set-new-password-after-otp
+    Note over C,S: {email: "user@example.com", otp: "123456", newPassword: "newPass123!", confirmPassword: "newPass123!"}
+    S->>D: Verify OTP again
+    D-->>S: OTP valid
+    S->>S: Hash new password
+    S->>D: Update password, clear OTP fields
+    S->>E: Send confirmation email
+    E-->>S: Email sent
+    S-->>C: {success: true, message: "Password changed"}
+
+    C->>S: POST /api/v1/user/reset-password
+    Note over C,S: {resetToken: "abc123", newPassword: "newPass123!", confirmPassword: "newPass123!"}
+    S->>D: Verify reset token
+    D-->>S: Token valid
+    S->>S: Hash new password
+    S->>D: Update password, clear reset fields
+    S->>E: Send confirmation email
+    E-->>S: Email sent
+    S-->>C: {success: true, message: "Password reset"}
+
+    C->>S: POST /api/v1/user/resend-otp
+    Note over C,S: {email: "user@example.com"}
+    S->>D: Check cooldown period
+    D-->>S: Can resend
+    S->>S: Generate new OTP
+    S->>D: Update OTP and expiry
+    S->>E: Send new OTP email
+    E-->>S: Email sent
+    S-->>C: {success: true, message: "New OTP sent"}
+```
+
+### 6. Plan Management Flow
 
 ```mermaid
 sequenceDiagram

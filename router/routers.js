@@ -5,6 +5,7 @@ const login = require('../accounts/login');
 const requestPasswordReset = require('../accounts/requestPasswordReset');
 const { verifyOtp, resendOtp } = require('../accounts/verifyOtp');
 const { resetPasswordWithToken, checkResetToken } = require('../accounts/resetPasswordWithToken');
+const setNewPasswordAfterOtp = require('../accounts/setNewPasswordAfterOtp');
 const getAllUsers = require('../admin/getAlluser');
 const verifyAdmin = require('../middleware/auth');
 const getUserProfile = require('../userProfile/userProfile');
@@ -53,6 +54,7 @@ router.post('/api/v1/user/verify-otp', verifyOtp);
 router.post('/api/v1/user/resend-otp', resendOtp);
 router.post('/api/v1/user/check-reset-token', checkResetToken);
 router.post('/api/v1/user/reset-password', resetPasswordWithToken);
+router.post('/api/v1/user/set-new-password-after-otp', setNewPasswordAfterOtp);
 
 // user profile
 router.get('/api/v1/user/profile/:uid', getUserProfile);
