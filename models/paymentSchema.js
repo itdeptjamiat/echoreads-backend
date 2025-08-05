@@ -181,7 +181,6 @@ paymentSchema.pre('save', function(next) {
 // Indexes for better query performance
 paymentSchema.index({ userId: 1, createdAt: -1 });
 paymentSchema.index({ status: 1 });
-paymentSchema.index({ paymentId: 1 });
 paymentSchema.index({ providerTransactionId: 1 });
 paymentSchema.index({ createdAt: -1 });
 
