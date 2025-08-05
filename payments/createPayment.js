@@ -61,8 +61,8 @@ const createPayment = async (req, res) => {
         const taxAmount = finalAmount * 0.05;
         const processingFee = 0; // Set based on your payment provider
 
-        // Generate unique payment ID
-        const paymentId = `PAY_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        // Generate unique 8-digit payment ID
+        const paymentId = Math.floor(10000000 + Math.random() * 90000000);
         
         // Generate provider transaction ID
         const providerTransactionId = `${provider.toUpperCase()}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;

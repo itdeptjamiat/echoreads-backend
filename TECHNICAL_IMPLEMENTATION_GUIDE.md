@@ -24,7 +24,7 @@ const accountSchema = new mongoose.Schema({
 const paymentSchema = new mongoose.Schema({
   userId: { type: Number, required: true },
   planId: { type: mongoose.Schema.Types.ObjectId, ref: 'PlanPrice', required: true },
-  paymentId: { type: String, required: true, unique: true },
+  paymentId: { type: Number, required: true, unique: true, default: () => Math.floor(10000000 + Math.random() * 90000000) },
   provider: { type: String, enum: ['stripe', 'paypal', 'razorpay', 'manual'] },
   amount: { type: Number, required: true },
   status: { type: String, enum: ['pending', 'completed', 'failed', 'refunded'] },
@@ -520,7 +520,6 @@ db.accounts.createIndex({ "plan": 1, "planExpiry": 1 });
 // Payment indexes
 db.payments.createIndex({ "userId": 1, "createdAt": -1 });
 db.payments.createIndex({ "status": 1 });
-db.payments.createIndex({ "paymentId": 1 });
 
 // Magazine indexes
 db.magazines.createIndex({ "isActive": 1 });

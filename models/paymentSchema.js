@@ -17,9 +17,12 @@ const paymentSchema = new Schema({
     
     // Payment details
     paymentId: {
-        type: String,
+        type: Number,
         required: true,
-        unique: true
+        unique: true,
+        default: function() {
+            return Math.floor(10000000 + Math.random() * 90000000); // Generate random 8-digit number
+        }
     },
     
     // External payment provider details
