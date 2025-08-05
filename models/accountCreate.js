@@ -28,7 +28,7 @@ const accountSchema = new mongoose.Schema({
   },
   userType:{
     type:String,
-    enum:['admin','user'],
+    enum:['admin','user','super_admin'],
     default:'user'
   },
   plan:{

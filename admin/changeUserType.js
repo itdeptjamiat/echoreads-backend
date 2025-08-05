@@ -2,21 +2,21 @@ const Account = require('../models/accountCreate');
 const nodemailer = require('nodemailer');
 
 /**
- * Change user type (admin only)
- * Allows admins to promote users to admin or demote admins to user
+ * Change user type (super_admin only)
+ * Allows super_admin to promote users to admin or demote admins to user
  */
 const changeUserType = async (req, res) => {
   try {
-    const { userId, newUserType } = req.body;
+    const { userId, newUserType, adminId } = req.body;
 
     // Validate input
-    if (!userId || !newUserType) {
+    if (!userId || !newUserType || !adminId) {
       return res.status(400).json({
         success: false,
-        message: 'User ID and new user type are required.'
+        message: 'User ID, new user type, and admin ID are required.'
       });
     }
-
+    
     // Validate user type
     if (!['admin', 'user'].includes(newUserType)) {
       return res.status(400).json({
@@ -25,8 +25,25 @@ const changeUserType = async (req, res) => {
       });
     }
 
+    // Find the admin making the change
+    const adminUser = await Account.findOne({ uid: adminId });
+    if (!adminUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin not found.'
+      });
+    }
+
+    // Check if the user making the request is a super_admin
+    if (adminUser.userType !== 'super_admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only super_admin can change user types.'
+      });
+    }
+
     // Find the user to be changed
-    const targetUser = await Account.findOne({uid: userId});
+    const targetUser = await Account.findOne({ uid: userId });
     if (!targetUser) {
       return res.status(404).json({
         success: false,
@@ -34,14 +51,19 @@ const changeUserType = async (req, res) => {
       });
     }
 
-    // Get the admin making the change
-    const adminUser = req.user;
-
-    // Prevent admin from changing their own type
-    if (targetUser._id.toString() === adminUser._id.toString()) {
+    // Prevent super_admin from changing their own type
+    if (targetUser.uid === adminUser.uid) {
       return res.status(400).json({
         success: false,
         message: 'You cannot change your own user type.'
+      });
+    }
+
+    // Prevent changing super_admin users
+    if (targetUser.userType === 'super_admin') {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot change super_admin user types.'
       });
     }
 
@@ -59,7 +81,7 @@ const changeUserType = async (req, res) => {
       success: true,
       message: `User type changed successfully from ${oldUserType} to ${newUserType}.`,
       data: {
-        userId: targetUser._id,
+        userId: targetUser.uid,
         username: targetUser.username,
         email: targetUser.email,
         oldUserType: oldUserType,
