@@ -1,4 +1,5 @@
 const Account = require('../models/accountCreate');
+const nodemailer = require('nodemailer');
 
 /**
  * Change user type (admin only)
@@ -25,7 +26,7 @@ const changeUserType = async (req, res) => {
     }
 
     // Find the user to be changed
-    const targetUser = await Account.findById(userId);
+    const targetUser = await Account.findOne({uid: userId});
     if (!targetUser) {
       return res.status(404).json({
         success: false,
@@ -82,9 +83,7 @@ const changeUserType = async (req, res) => {
  */
 async function sendUserTypeChangeNotification(email, username, newUserType, changedByAdmin) {
   try {
-    const nodemailer = require('nodemailer');
-    
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
@@ -197,4 +196,4 @@ const getUserTypeStats = async (req, res) => {
   }
 };
 
-module.exports = { changeUserType, getUserTypeStats }; 
+module.exports = { changeUserType, getUserTypeStats };
