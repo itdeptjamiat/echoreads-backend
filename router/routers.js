@@ -24,6 +24,7 @@ const deletePlan = require('../admin/deletePlan');
 
 // Admin user management
 const deleteUser = require('../admin/deleteUser');
+const { changeUserType, getUserTypeStats } = require('../admin/changeUserType');
 
 // Download management imports
 const downloadMagazine = require('../downloads/downloadMagazine');
@@ -76,6 +77,10 @@ router.get('/api/v1/admin/users', verifyAdmin, getAllUsers);
 router.delete('/api/v1/admin/delete-user', verifyAdmin, deleteUser);
 // change password by admin
 router.post('/api/v1/admin/reset-password',adminResetPassword);
+// change user type (admin only)
+router.put('/api/v1/admin/change-user-type', verifyAdmin, changeUserType);
+// get user type statistics (admin only)
+router.get('/api/v1/admin/user-type-stats', verifyAdmin, getUserTypeStats);
 
 // Download management routes
 router.post('/api/v1/download/magazine', downloadMagazine);

@@ -256,6 +256,34 @@ A comprehensive backend API for EchoReads, a digital magazine platform with user
   ```
 - **Security:** Prevents admin self-deletion and admin-to-admin deletion
 
+#### Change User Type (Admin Only)
+- **PUT** `/api/v1/admin/change-user-type`
+- **Headers:** `Authorization: Bearer <admin_jwt_token>`
+- **Body:**  
+  ```json
+  {
+    "userId": "507f1f77bcf86cd799439011",
+    "newUserType": "admin"
+  }
+  ```
+- **Security:** Prevents admin from changing their own type
+- **Features:** Sends email notification to user about role change
+
+#### Get User Type Statistics
+- **GET** `/api/v1/admin/user-type-stats`
+- **Headers:** `Authorization: Bearer <admin_jwt_token>`
+- **Response:**  
+  ```json
+  {
+    "success": true,
+    "data": {
+      "admin": 3,
+      "user": 150,
+      "total": 153
+    }
+  }
+  ```
+
 #### Payment History (Admin Only)
 - **POST** `/api/v1/admin/payment-history`
 - **Headers:** `Authorization: Bearer <admin_jwt_token>`
@@ -295,6 +323,7 @@ echoReadsBacken/
 │   ├── getAlluser.js
 │   ├── adminResetPassword.js
 │   ├── deleteUser.js
+│   ├── changeUserType.js
 │   ├── updateMagzin.js
 │   ├── deleteMagzin.js
 │   ├── updatePlan.js

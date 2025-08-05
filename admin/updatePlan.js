@@ -64,4 +64,52 @@ const updatePlan = async (req, res) => {
     }
 };
 
-module.exports = updatePlan; 
+module.exports = updatePlan;
+
+/*
+Example request body for Postman testing:
+
+1. Update EchoPro Plan:
+{
+    "planType": "echopro",
+    "price": 99.99,
+    "description": "Premium access to EchoReads magazines",
+    "features": [
+        "Access to premium magazines",
+        "Ad-free reading experience",
+        "Download up to 20 magazines per month"
+    ],
+    "durationInDays": 30,
+    "discountPercentage": 20,
+    "discountValidUntil": "2024-12-31T23:59:59Z"
+}
+
+2. Update Free Plan:
+{
+    "planType": "free",
+    "price": 0,
+    "description": "Basic access to EchoReads",
+    "features": [
+        "Access to basic magazines",
+        "Limited downloads per month",
+        "Ad-supported reading"
+    ],
+    "durationInDays": 30
+}
+
+3. Update EchoProPlus Plan:
+{
+    "planType": "echoproplus",
+    "price": 199.99,
+    "description": "Ultimate access to EchoReads magazines",
+    "features": [
+        "Unlimited magazine access",
+        "Priority customer support",
+        "Exclusive content access",
+        "Unlimited downloads"
+    ],
+    "durationInDays": 365,
+    "discountPercentage": 15,
+    "discountValidUntil": "2024-12-31T23:59:59Z"
+}
+*/
