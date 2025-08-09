@@ -9,6 +9,7 @@ const setNewPasswordAfterOtp = require('../accounts/setNewPasswordAfterOtp');
 const getAllUsers = require('../admin/getAlluser');
 const verifyAdmin = require('../middleware/auth');
 const getUserProfile = require('../userProfile/userProfile');
+const updateUserProfile = require('../userProfile/updateUserProfile');
 const adminResetPassword = require('../admin/adminResetPassword');
 const createMagzine = require('../magzinesFiles/createMagzine');
 const getAllMagzines = require('../magzinesFiles/getAllmagzin');
@@ -66,6 +67,7 @@ router.post('/api/v1/user/set-new-password-after-otp', setNewPasswordAfterOtp);
 
 // user profile
 router.get('/api/v1/user/profile/:uid', getUserProfile);
+router.put('/api/v1/user/profile/:uid', updateUserProfile);
 
 // get all magzines
 router.get('/api/v1/user/magzines',getAllMagzines);

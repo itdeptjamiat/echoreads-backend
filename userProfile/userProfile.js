@@ -9,25 +9,40 @@ const getUserProfile = async (req, res) => {
   try {
     const { uid } = req.params;
     if (!uid) {
-      return res.status(400).json({ message: 'User ID (uid) is required in params.' });
+      return res.status(400).json({ 
+        success: false,
+        message: 'User ID (uid) is required in params.' 
+      });
     }
 
     // Ensure uid is a number
     const numericUid = Number(uid);
     if (isNaN(numericUid)) {
-      return res.status(400).json({ message: 'User ID (uid) must be a number.' });
+      return res.status(400).json({ 
+        success: false,
+        message: 'User ID (uid) must be a number.' 
+      });
     }
 
     // Find user by uid (number), exclude password and jwtToken
-    const user = await Account.findOne({ uid: numericUid }).select('-password -jwtToken');
+    const user = await Account.findOne({ uid: numericUid }).select('-password -jwtToken -resetPasswordOtp -resetPasswordOtpExpiry -resetPasswordOtpVerified');
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'User not found.' 
+      });
     }
 
-    return res.status(200).json({ user });
+    return res.status(200).json({ 
+      success: true,
+      data: { user }
+    });
   } catch (error) {
     console.error('Get User Profile Error:', error);
-    return res.status(500).json({ message: 'Server error, please try again later.' });
+    return res.status(500).json({ 
+      success: false,
+      message: 'Server error, please try again later.' 
+    });
   }
 };
 
