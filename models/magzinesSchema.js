@@ -53,9 +53,24 @@ const magzinesSchema = new Schema({
     },
     reviews:[
         {
-            type:String,
-            time:Date.now(),
-            userId:Number,
+            userId: {
+                type: Number,
+                required: true
+            },
+            rating: {
+                type: Number,
+                required: true,
+                min: 1,
+                max: 5
+            },
+            review: {
+                type: String,
+                default: ''
+            },
+            time: {
+                type: Date,
+                default: Date.now
+            }
         },
     ],
     createdAt:{

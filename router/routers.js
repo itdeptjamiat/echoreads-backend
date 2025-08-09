@@ -16,6 +16,13 @@ const getMagzineByMid = require('../magzinesFiles/getMagzineByMid');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 
+// Rating management imports
+const rateMagazine = require('../ratings/rateMagazine');
+const getMagazineRatings = require('../ratings/getMagazineRatings');
+const deleteRating = require('../ratings/deleteRating');
+const getTopRatedMagazines = require('../ratings/getTopRatedMagazines');
+const { deleteReview, getRatingAnalytics, getAllReviews } = require('../ratings/adminRatingManagement');
+
 // Plan management imports
 const createPlan = require('../planPrices/createPlan');
 const getAllPlans = require('../planPrices/getAllPlans');
@@ -118,6 +125,17 @@ router.post('/api/v1/admin/expiring-soon', verifyAdmin, getExpiringSoonUsers);
 router.post('/api/v1/admin/create-magzine',createMagzine);
 router.delete('/api/v1/admin/delete-magzine',deleteMagazin);
 router.put('/api/v1/admin/update-magzine',updateMagazin);
+
+// Rating management routes
+router.post('/api/v1/user/rate-magazine', rateMagazine);
+router.get('/api/v1/user/magazine-ratings/:mid', getMagazineRatings);
+router.delete('/api/v1/user/delete-rating', deleteRating);
+router.get('/api/v1/user/top-rated-magazines', getTopRatedMagazines);
+
+// Admin rating management routes
+router.delete('/api/v1/admin/delete-review', verifyAdmin, deleteReview);
+router.get('/api/v1/admin/rating-analytics', verifyAdmin, getRatingAnalytics);
+router.get('/api/v1/admin/all-reviews', verifyAdmin, getAllReviews);
 
 
 module.exports = router;
