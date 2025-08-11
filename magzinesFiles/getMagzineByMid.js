@@ -26,11 +26,18 @@ const getMagzineByMid = async (req, res) => {
             return res.status(404).json({ message: 'Magazine is not available' });
         }
 
-        res.status(200).json(magzine);
+        res.status(200).json({
+            success: true,
+            message: 'Magazine fetched successfully',
+            data: magzine
+        });
         
     } catch (error) {
         console.error("Error fetching magazine by mid:", error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Internal server error' 
+        });
     }
 }
 

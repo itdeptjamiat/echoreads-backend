@@ -24,7 +24,10 @@ const updateMagzin = async (req, res) => {
         });
     } catch (error) {
         console.error('Update Magazine Error:', error.message);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Internal server error' 
+        });
     }
 };
 

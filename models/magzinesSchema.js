@@ -40,6 +40,9 @@ const magzinesSchema = new Schema({
         type:String,
         default:'other',
     },
+    audioFile:{
+        type:String,
+    },
     downloads:{
         type:Number,
         default:0,

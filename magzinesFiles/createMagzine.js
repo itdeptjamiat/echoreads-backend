@@ -27,7 +27,8 @@ const createMagzine = async (req, res) => {
             fileType = 'pdf', 
             magzineType = 'magzine',
             category = 'other', 
-            description = '' 
+            description = '' ,
+            audioFile = ''
         } = req.body;
         
         if (!name || !image || !file || !type) {
@@ -66,7 +67,8 @@ const createMagzine = async (req, res) => {
             downloads: 0,
             rating: 0,
             reviews: [],
-            createdAt: new Date()
+            createdAt: new Date(),
+            audioFile
         });
 
         await magzine.save();
