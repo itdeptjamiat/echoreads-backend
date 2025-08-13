@@ -16,6 +16,7 @@ const createMagzine = require('../magzinesFiles/createMagzine');
 const getAllMagzines = require('../magzinesFiles/getAllmagzin');
 const getMagzineByMid = require('../magzinesFiles/getMagzineByMid');
 const searchMagazinesByCategory = require('../magzinesFiles/searchMagazinesByCategory');
+const { getHomeScreenData, getContentByType, getCategories, searchContent } = require('../magzinesFiles/homeScreen');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 
@@ -63,8 +64,6 @@ router.post('/api/v1/user/login',login);
 router.post('/api/v1/user/request-password-reset', requestPasswordReset);
 router.post('/api/v1/user/verify-otp', verifyOtp);
 router.post('/api/v1/user/resend-otp', resendOtp);
-router.post('/api/v1/user/check-reset-token', checkResetToken);
-router.post('/api/v1/user/reset-password', resetPasswordWithToken);
 router.post('/api/v1/user/set-new-password-after-otp', setNewPasswordAfterOtp);
 // Simple password reset (no OTP, no tokens)
 router.post('/api/v1/user/simple-password-reset', simplePasswordReset);
@@ -83,6 +82,12 @@ router.get('/api/v1/user/magzines',getAllMagzines);
 router.get('/api/v1/user/magzines/:mid',getMagzineByMid);
 // search magazines by category
 router.post('/api/v1/user/search-magazines-by-category',searchMagazinesByCategory);
+
+// Enhanced Home Screen APIs
+router.get('/api/v1/user/home', getHomeScreenData);
+router.get('/api/v1/user/content/:type', getContentByType);
+router.get('/api/v1/user/categories', getCategories);
+router.get('/api/v1/user/search', searchContent);
 
 // Plan management routes
 router.get('/api/v1/plans', getAllPlans); // Public route to get all plans
