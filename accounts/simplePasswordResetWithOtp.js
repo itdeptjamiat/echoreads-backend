@@ -81,15 +81,14 @@ const requestPasswordResetOtp = async (req, res) => {
             });
         }
 
-        // Check rate limiting (2 minutes cooldown)
+        // Check rate limiting (30 seconds cooldown)
         const lastResetTime = user.resetPasswordOtpExpiry;
         const timeSinceLastReset = lastResetTime ? Date.now() - lastResetTime : 0;
-        
-        if (timeSinceLastReset < 2 * 60 * 1000) { // 2 minutes
-            const remainingTime = Math.ceil((2 * 60 * 1000 - timeSinceLastReset) / 1000);
+
+        if (timeSinceLastReset < 30 * 1000) { // 30 seconds
             return res.status(429).json({
                 success: false,
-                message: `Please wait ${remainingTime} seconds before requesting another OTP`
+                message: 'Please wait 30 seconds before requesting another OTP'
             });
         }
 
@@ -224,4 +223,4 @@ const resetPasswordWithOtp = async (req, res) => {
 module.exports = {
     requestPasswordResetOtp,
     resetPasswordWithOtp
-}; 
+};
