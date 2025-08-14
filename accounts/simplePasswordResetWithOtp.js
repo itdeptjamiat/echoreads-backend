@@ -81,17 +81,6 @@ const requestPasswordResetOtp = async (req, res) => {
             });
         }
 
-        // Check rate limiting (30 seconds cooldown)
-        const lastResetTime = user.resetPasswordOtpExpiry;
-        const timeSinceLastReset = lastResetTime ? Date.now() - lastResetTime : 0;
-
-        if (timeSinceLastReset < 30 * 1000) { // 30 seconds
-            return res.status(429).json({
-                success: false,
-                message: 'Please wait 30 seconds before requesting another OTP'
-            });
-        }
-
         // Generate OTP and set expiry
         const otp = generateOTP();
         const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
