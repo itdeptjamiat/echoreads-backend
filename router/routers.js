@@ -19,6 +19,7 @@ const searchMagazinesByCategory = require('../magzinesFiles/searchMagazinesByCat
 const { getHomeScreenData, getContentByType, getCategories, searchContent } = require('../magzinesFiles/homeScreen');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
+const changeProfileImg = require('../userProfile/changeProfileImg');
 
 // Rating management imports
 const rateMagazine = require('../ratings/rateMagazine');
@@ -57,8 +58,8 @@ const triggerAutoExpiry = require('../autoPlanManagement/autoExpiryRoute');
 const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = require('../autoPlanManagement/schedulerRoutes');
 
 // account login
-router.post('/api/v1/user/signup',signup);
-router.post('/api/v1/user/login',login);
+router.post('/api/v1/user/signup', signup);
+router.post('/api/v1/user/login', login);
 
 // Password reset flow
 router.post('/api/v1/user/request-password-reset', requestPasswordReset);
@@ -68,6 +69,8 @@ router.post('/api/v1/user/set-new-password-after-otp', setNewPasswordAfterOtp);
 // Simple password reset (no OTP, no tokens)
 router.post('/api/v1/user/simple-password-reset', simplePasswordReset);
 
+
+
 // Password reset with OTP verification (2 steps)
 router.post('/api/v1/user/request-password-reset-otp', requestPasswordResetOtp);
 router.post('/api/v1/user/reset-password-with-otp', resetPasswordWithOtp);
@@ -76,12 +79,15 @@ router.post('/api/v1/user/reset-password-with-otp', resetPasswordWithOtp);
 router.get('/api/v1/user/profile/:uid', getUserProfile);
 router.put('/api/v1/user/profile/:uid', updateUserProfile);
 
+// update Profile img
+router.put('/api/v1/user/change-profile-img', changeProfileImg);
+
 // get all magzines
-router.get('/api/v1/user/magzines',getAllMagzines);
+router.get('/api/v1/user/magzines', getAllMagzines);
 // get magazine by mid
-router.get('/api/v1/user/magzines/:mid',getMagzineByMid);
+router.get('/api/v1/user/magzines/:mid', getMagzineByMid);
 // search magazines by category
-router.post('/api/v1/user/search-magazines-by-category',searchMagazinesByCategory);
+router.post('/api/v1/user/search-magazines-by-category', searchMagazinesByCategory);
 
 // Enhanced Home Screen APIs
 router.get('/api/v1/user/home', getHomeScreenData);
@@ -100,7 +106,7 @@ router.get('/api/v1/admin/users', verifyAdmin, getAllUsers);
 // delete user (admin only)
 router.delete('/api/v1/admin/delete-user', verifyAdmin, deleteUser);
 // change password by admin
-router.post('/api/v1/admin/reset-password',adminResetPassword);
+router.post('/api/v1/admin/reset-password', adminResetPassword);
 // change user type (admin only)
 router.put('/api/v1/admin/change-user-type', verifyAdmin, changeUserType);
 // get user type statistics (admin only)
@@ -139,9 +145,9 @@ router.post('/api/v1/admin/expiry-management', verifyAdmin, getExpiryManagement)
 router.post('/api/v1/admin/trigger-auto-expiry', verifyAdmin, triggerAutoExpiryCheck);
 router.post('/api/v1/admin/expiring-soon', verifyAdmin, getExpiringSoonUsers);
 // create a magzine
-router.post('/api/v1/admin/create-magzine',createMagzine);
-router.delete('/api/v1/admin/delete-magzine',deleteMagazin);
-router.put('/api/v1/admin/update-magzine',updateMagazin);
+router.post('/api/v1/admin/create-magzine', createMagzine);
+router.delete('/api/v1/admin/delete-magzine', deleteMagazin);
+router.put('/api/v1/admin/update-magzine', updateMagazin);
 
 // Rating management routes
 router.post('/api/v1/user/rate-magazine', rateMagazine);
