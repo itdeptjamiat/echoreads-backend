@@ -126,7 +126,7 @@ const requestPasswordResetOtp = async (req, res) => {
             data: {
                 email: user.email,
                 expiresIn: '10 minutes',
-                otp: otp
+                // otp: otp
             }
         });
 
