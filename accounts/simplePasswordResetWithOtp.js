@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
  * Generate a simple 6-digit OTP
  */
 function generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    return Math.floor(100000 + Math.random() * 900000);
 }
 
 /**
@@ -14,13 +14,22 @@ function generateOTP() {
  */
 async function sendOtpEmail(email, otp, username) {
     try {
-        const transporter = nodemailer.createTransporter({
+        // Check if required environment variables are set
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.error('Email configuration missing: EMAIL_USER or EMAIL_PASS not set');
+            return false;
+        }
+
+        const transporter = nodemailer.createTransport({
             service: process.env.EMAIL_SERVICE || 'gmail',
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
         });
+
+        // Verify transporter configuration
+        await transporter.verify();
 
         const mailOptions = {
             from: `"EchoReads" <${process.env.EMAIL_USER}>`,
@@ -71,6 +80,15 @@ const requestPasswordResetOtp = async (req, res) => {
             });
         }
 
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide a valid email address'
+            });
+        }
+
         // Find user by email
         const user = await Account.findOne({ email });
 
@@ -83,15 +101,16 @@ const requestPasswordResetOtp = async (req, res) => {
 
         // Generate OTP and set expiry
         const otp = generateOTP();
-        const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-        // Save OTP to user
+        // Save OTP to user - using Number type as per schema
         user.resetPasswordOtp = otp;
         user.resetPasswordOtpExpiry = otpExpiry;
+        user.resetPasswordOtpVerified = false;
         await user.save();
 
         // Send OTP via email
-        const otpSent = await sendOtpEmail(user.email, otp, user.username);
+        const otpSent = await sendOtpEmail(user.email, otp, user.username || user.name);
 
         if (!otpSent) {
             return res.status(500).json({
@@ -106,7 +125,8 @@ const requestPasswordResetOtp = async (req, res) => {
             message: 'OTP sent successfully to your email',
             data: {
                 email: user.email,
-                expiresIn: '10 minutes'
+                expiresIn: '10 minutes',
+                otp: otp
             }
         });
 
@@ -142,6 +162,15 @@ const resetPasswordWithOtp = async (req, res) => {
             });
         }
 
+        // Convert OTP to number for comparison (schema expects Number)
+        const otpNumber = parseInt(otp);
+        if (isNaN(otpNumber)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid OTP format'
+            });
+        }
+
         // Find user by email
         const user = await Account.findOne({ email });
 
@@ -161,10 +190,11 @@ const resetPasswordWithOtp = async (req, res) => {
         }
 
         // Check if OTP is expired
-        if (Date.now() > user.resetPasswordOtpExpiry) {
+        if (Date.now() > user.resetPasswordOtpExpiry.getTime()) {
             // Clear expired OTP
             user.resetPasswordOtp = undefined;
             user.resetPasswordOtpExpiry = undefined;
+            user.resetPasswordOtpVerified = false;
             await user.save();
 
             return res.status(400).json({
@@ -173,8 +203,8 @@ const resetPasswordWithOtp = async (req, res) => {
             });
         }
 
-        // Verify OTP
-        if (user.resetPasswordOtp !== otp) {
+        // Verify OTP (compare numbers)
+        if (user.resetPasswordOtp !== otpNumber) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid OTP. Please check and try again'
@@ -188,6 +218,7 @@ const resetPasswordWithOtp = async (req, res) => {
         user.password = hashedPassword;
         user.resetPasswordOtp = undefined;
         user.resetPasswordOtpExpiry = undefined;
+        user.resetPasswordOtpVerified = true;
         await user.save();
 
         // Success response
