@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const signup = require('../accounts/signup');
 const login = require('../accounts/login');
-const requestPasswordReset = require('../accounts/requestPasswordReset');
-const { verifyOtp, resendOtp } = require('../accounts/verifyOtp');
-const setNewPasswordAfterOtp = require('../accounts/setNewPasswordAfterOtp');
-const simplePasswordReset = require('../accounts/simplePasswordReset');
 const { requestPasswordResetOtp, resetPasswordWithOtp } = require('../accounts/simplePasswordResetWithOtp');
 const getAllUsers = require('../admin/getAlluser');
 const verifyAdmin = require('../middleware/auth');
@@ -61,13 +57,7 @@ const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = 
 router.post('/api/v1/user/signup', signup);
 router.post('/api/v1/user/login', login);
 
-// Password reset flow
-router.post('/api/v1/user/request-password-reset', requestPasswordReset);
-router.post('/api/v1/user/verify-otp', verifyOtp);
-router.post('/api/v1/user/resend-otp', resendOtp);
-router.post('/api/v1/user/set-new-password-after-otp', setNewPasswordAfterOtp);
-// Simple password reset (no OTP, no tokens)
-router.post('/api/v1/user/simple-password-reset', simplePasswordReset);
+
 
 
 
