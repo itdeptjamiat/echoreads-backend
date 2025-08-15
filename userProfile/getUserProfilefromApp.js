@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
+// ✅ Correct R2 S3 API endpoint (no bucket name in URL)
 const s3 = new AWS.S3({
     endpoint: 'https://ef6de2d4389d2f6608f081f1c3405a28.r2.cloudflarestorage.com',
     accessKeyId: 'e680e4254dfba4e0bf0d481cd0c7c0bf',
@@ -12,17 +13,14 @@ const s3 = new AWS.S3({
     signatureVersion: 'v4',
 });
 
-// Configure multer for memory storage
+// ✅ Multer in-memory storage
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB limit
-    },
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
-
         if (mimetype && extname) {
             return cb(null, true);
         } else {
@@ -33,53 +31,37 @@ const upload = multer({
 
 const updateUserProfilePic = async (req, res) => {
     try {
-        const uid = req.user?.uid || req.params.uid;
+        // ✅ Allow uid from JWT, URL param, or form-data for Postman testing
+        const uid = req.user?.uid || req.params.uid || req.body.uid;
 
         if (!uid) {
-            return res.status(400).json({
-                success: false,
-                message: 'User ID (uid) is required'
-            });
+            return res.status(400).json({ success: false, message: 'User ID (uid) is required' });
         }
 
-        // Ensure uid is a number
         const numericUid = Number(uid);
         if (isNaN(numericUid)) {
-            return res.status(400).json({
-                success: false,
-                message: 'User ID (uid) must be a number'
-            });
+            return res.status(400).json({ success: false, message: 'User ID (uid) must be a number' });
         }
 
         if (!req.file) {
-            return res.status(400).json({
-                success: false,
-                message: 'Profile image is required'
-            });
+            return res.status(400).json({ success: false, message: 'Profile image is required' });
         }
 
-        // Check file size (5MB limit)
         if (req.file.size > 5 * 1024 * 1024) {
-            return res.status(400).json({
-                success: false,
-                message: 'Image size must be less than 5MB'
-            });
+            return res.status(400).json({ success: false, message: 'Image size must be less than 5MB' });
         }
 
-        // Find user by uid
+        // ✅ Find user
         const user = await Account.findOne({ uid: numericUid });
         if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        // Generate unique filename
+        // ✅ Create unique filename
         const fileExtension = path.extname(req.file.originalname);
         const fileName = `profile-pics/${numericUid}-${uuidv4()}${fileExtension}`;
 
-        // Upload to R2
+        // ✅ Upload to Cloudflare R2
         const params = {
             Bucket: 'echoreads',
             Key: fileName,
@@ -90,25 +72,22 @@ const updateUserProfilePic = async (req, res) => {
 
         await s3.upload(params).promise();
 
-        // Generate public URL
-        const publicUrl = `https://ef6de2d4389d2f6608f081f1c3405a28.r2.cloudflarestorage.com/echoreads/${fileName}`;
+        // ✅ Generate public R2 URL
+        const publicUrl = `https://pub-b8050509235e4bcca261901d10608e30.r2.dev/${fileName}`;
 
-        // Update user profile
+        // ✅ Save to DB
         user.profilePic = publicUrl;
         await user.save();
 
         res.status(200).json({
             success: true,
             message: 'Profile picture updated successfully',
-            data: {
-                profilePic: publicUrl
-            }
+            data: { profilePic: publicUrl }
         });
 
     } catch (error) {
         console.error("Error updating profile picture:", error);
 
-        // Handle multer file size error
         if (error.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).json({
                 success: false,
@@ -116,10 +95,7 @@ const updateUserProfilePic = async (req, res) => {
             });
         }
 
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        });
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
 

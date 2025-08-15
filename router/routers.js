@@ -72,7 +72,7 @@ router.put('/api/v1/user/profile/:uid', updateUserProfile);
 
 // update Profile img
 router.put('/api/v1/user/change-profile-img', changeProfileImg);
-router.post('/api/v1/user/update-profile-img', upload.single('profileImage'), updateUserProfilePic);
+router.post('/api/v1/user/update-profile-img/:uid', upload.single('profileImage'), updateUserProfilePic);
 
 // get all magzines
 router.get('/api/v1/user/magzines', getAllMagzines);
