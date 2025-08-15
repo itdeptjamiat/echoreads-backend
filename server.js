@@ -13,7 +13,7 @@ app.use(express.json());
 // Connect to database
 connectDB();
 
-app.use('/',router);
+app.use('/', router);
 
 
 app.get('/', (req, res) => {
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
-  
+
   // Start the daily expiry scheduler
   startDailyScheduler();
 });

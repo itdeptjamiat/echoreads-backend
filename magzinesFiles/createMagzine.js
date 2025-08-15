@@ -3,13 +3,21 @@ const Magzines = require('../models/magzinesSchema');
 // create auto mid :
 const createMid = async () => {
     try {
-        const magzines = await Magzines.find({}); // Fetch all documents
-        if (magzines.length === 0) {
-            return 1;
+        let newMid;
+        let isUnique = false;
+        
+        // Keep generating random 6-digit numbers until we find a unique one
+        while (!isUnique) {
+            newMid = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit random number
+            
+            // Check if this mid already exists
+            const existingMagzine = await Magzines.findOne({ mid: newMid });
+            if (!existingMagzine) {
+                isUnique = true;
+            }
         }
-        // Find the maximum existing mid and increment it
-        const maxMidDoc = await Magzines.findOne().sort({ mid: -1 }).limit(1);
-        return maxMidDoc ? maxMidDoc.mid + 1 : 1;
+        
+        return newMid;
     } catch (error) {
         console.error("Error generating MID:", error);
         throw new Error("Failed to generate magazine ID."); // Propagate error
@@ -49,7 +57,7 @@ const createMagzine = async (req, res) => {
             });
         }
 
-        // Generate a new unique mid
+        // Generate a new unique 6-digit random mid
         const newMid = await createMid();
 
         // Create new magazine with all fields from schema
