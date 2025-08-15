@@ -16,6 +16,7 @@ const { getHomeScreenData, getContentByType, getCategories, searchContent } = re
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 const changeProfileImg = require('../userProfile/changeProfileImg');
+const { updateUserProfilePic, upload } = require('../userProfile/getUserProfilefromApp');
 
 // Rating management imports
 const rateMagazine = require('../ratings/rateMagazine');
@@ -71,6 +72,7 @@ router.put('/api/v1/user/profile/:uid', updateUserProfile);
 
 // update Profile img
 router.put('/api/v1/user/change-profile-img', changeProfileImg);
+router.post('/api/v1/user/update-profile-img', upload.single('profileImage'), updateUserProfilePic);
 
 // get all magzines
 router.get('/api/v1/user/magzines', getAllMagzines);
