@@ -17,6 +17,7 @@ const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 const changeProfileImg = require('../userProfile/changeProfileImg');
 const { updateUserProfilePic, upload } = require('../userProfile/getUserProfilefromApp');
+const { uploadFolderToR2, upload: uploadFiles } = require('../magzinesFiles/uploadeFolderInR2');
 
 // Rating management imports
 const rateMagazine = require('../ratings/rateMagazine');
@@ -78,6 +79,9 @@ router.post('/api/v1/user/update-profile-img/:uid', upload.single('profileImage'
 router.get('/api/v1/user/magzines', getAllMagzines);
 // get magazine by mid
 router.get('/api/v1/user/magzines/:mid', getMagzineByMid);
+
+// upload magazine files
+router.post('/api/v1/user/upload-magazine-files', uploadFiles.array('files'), uploadFolderToR2);
 // search magazines by category
 router.post('/api/v1/user/search-magazines-by-category', searchMagazinesByCategory);
 

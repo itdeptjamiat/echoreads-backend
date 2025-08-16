@@ -15,9 +15,11 @@ function generateOTP() {
 async function sendOtpEmail(email, otp) {
   // Configure your transporter (use environment variables for real projects)
   const transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE || 'gmail',
+    host: 'smtp.stackmail.com',
+    port: 465,
+    secure: true, // true for port 465
     auth: {
-      user: process.env.EMAIL_USER,
+      user: process.env.EMAIL_USER, // no-reply@echoreads.online
       pass: process.env.EMAIL_PASS,
     },
   });

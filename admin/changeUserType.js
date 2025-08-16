@@ -14,7 +14,7 @@ const changeUserType = async (req, res) => {
         message: 'User ID, new user type, and admin ID are required.'
       });
     }
-    
+
     if (!['admin', 'user'].includes(newUserType)) {
       return res.status(400).json({
         success: false,
@@ -85,7 +85,7 @@ const changeUserType = async (req, res) => {
   } catch (error) {
     console.error('Change User Type Error:', error);
     return res.status(500).json({
-      success: false, 
+      success: false,
       message: 'Server error, please try again later.'
     });
   }
@@ -97,15 +97,17 @@ const changeUserType = async (req, res) => {
 async function sendUserTypeChangeNotification(email, username, newUserType, changedByAdmin) {
   try {
     const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE || 'gmail',
+      host: 'smtp.stackmail.com',
+      port: 465,
+      secure: true, // true for port 465
       auth: {
-        user: process.env.EMAIL_USER,
+        user: process.env.EMAIL_USER, // no-reply@echoreads.online
         pass: process.env.EMAIL_PASS,
       },
     });
 
     const isPromoted = newUserType === 'admin';
-    const subject = isPromoted 
+    const subject = isPromoted
       ? '🎉 Promoted to Admin - EchoReads'
       : '📋 Account Type Updated - EchoReads';
 

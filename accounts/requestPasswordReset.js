@@ -22,10 +22,12 @@ function generateResetToken() {
 async function sendOtpEmail(email, otp, username) {
   try {
     // Configure email transporter
-    const transporter = nodemailer.createTransporter({
-      service: process.env.EMAIL_SERVICE || 'gmail',
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.stackmail.com',
+      port: 465,
+      secure: true, // true for port 465
       auth: {
-        user: process.env.EMAIL_USER,
+        user: process.env.EMAIL_USER, // no-reply@echoreads.online
         pass: process.env.EMAIL_PASS,
       },
     });
@@ -101,7 +103,7 @@ const requestPasswordReset = async (req, res) => {
     // Check if user has recently requested a reset (rate limiting)
     const lastResetTime = user.resetPasswordOtpExpiry;
     const timeSinceLastReset = lastResetTime ? Date.now() - lastResetTime : 0;
-    
+
     if (timeSinceLastReset < 2 * 60 * 1000) { // 2 minutes cooldown
       const remainingTime = Math.ceil((2 * 60 * 1000 - timeSinceLastReset) / 1000);
       return res.status(429).json({

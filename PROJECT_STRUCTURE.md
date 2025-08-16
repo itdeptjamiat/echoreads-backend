@@ -315,7 +315,7 @@ payments/
 ```env
 MONGODB_URI=mongodb://localhost:27017/echoreads
 JWT_SECRET=your_jwt_secret_key
-EMAIL_USER=your_email@gmail.com
+EMAIL_USER=no-reply@echoreads.online
 EMAIL_PASS=your_email_password
 CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_cloudinary_key
