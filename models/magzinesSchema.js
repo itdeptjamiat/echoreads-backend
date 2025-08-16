@@ -2,59 +2,105 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const magzinesSchema = new Schema({
-    mid:{
-        type:Number,
-        required:true,
+    mid: {
+        type: Number,
+        required: true,
     },
-    name:{
-        type:String,
-        required:true,
+    name: {
+        type: String,
+        required: true,
     },
-    image:{
-        type:String,
-        required:true,
+    image: {
+        type: String,
+        required: true,
     },
-    file:{
-        type:String,
-        required:true,
+    file: {
+        type: String,
+        required: true,
     },
-    type:{
-        type:String,
-        enum:['free','pro'],
-        default:'free',
+    type: {
+        type: String,
+        enum: ['free', 'pro'],
+        default: 'free',
     },
-    fileType:{
-        type:String,
-        default:'pdf',
+    fileType: {
+        type: String,
+        default: 'pdf',
     },
-    magzineType:{
-        type:String,
-        enum:['magzine','article','digest'],
-        default:'magzine',
+    magzineType: {
+        type: String,
+        enum: ['magzine', 'article', 'digest'],
+        default: 'magzine',
     },
-    isActive:{
-        type:Boolean,
-        default:true,
+    isActive: {
+        type: Boolean,
+        default: true,
     },
-    category:{
-        type:String,
-        default:'other',
+    category: {
+        type: String,
+        default: 'other',
     },
-    audioFile:{
-        type:String,
+    audioFile: {
+        type: String,
     },
-    downloads:{
-        type:Number,
-        default:0,
+    downloads: {
+        type: Number,
+        default: 0,
     },
-    description:{
-        type:String,
+    views: {
+        type: Number,
+        default: 0,
     },
-    rating:{
-        type:Number,
-        default:0,
+    likes: {
+        type: Number,
+        default: 0,
     },
-    reviews:[
+    reads: {
+        type: Number,
+        default: 0,
+    },
+    likedBy: [{
+        userId: {
+            type: Number,
+            required: true
+        },
+        likedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    viewedBy: [{
+        userId: {
+            type: Number,
+            required: true
+        },
+        viewedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    readBy: [{
+        userId: {
+            type: Number,
+            required: true
+        },
+        readAt: {
+            type: Date,
+            default: Date.now
+        },
+        readDuration: {
+            type: Number, // in minutes
+            default: 0
+        }
+    }],
+    description: {
+        type: String,
+    },
+    rating: {
+        type: Number,
+        default: 0,
+    },
+    reviews: [
         {
             userId: {
                 type: Number,
@@ -76,12 +122,12 @@ const magzinesSchema = new Schema({
             }
         },
     ],
-    createdAt:{
-        type:Date,
-    
-},
+    createdAt: {
+        type: Date,
+
+    },
 })
 
-const Magzines = mongoose.model('Magzines',magzinesSchema);
+const Magzines = mongoose.model('Magzines', magzinesSchema);
 
 module.exports = Magzines;

@@ -12,6 +12,13 @@ const createMagzine = require('../magzinesFiles/createMagzine');
 const getAllMagzines = require('../magzinesFiles/getAllmagzin');
 const getMagzineByMid = require('../magzinesFiles/getMagzineByMid');
 const searchMagazinesByCategory = require('../magzinesFiles/searchMagazinesByCategory');
+const simpleSearchByCategory = require('../magzinesFiles/simpleSearchByCategory');
+const getRecommendedMagazines = require('../magzinesFiles/getRecommendedMagazines');
+const getRecommendedDigests = require('../magzinesFiles/getRecommendedDigests');
+const getRecommendedArticles = require('../magzinesFiles/getRecommendedArticles');
+const addView = require('../magzinesFiles/addView');
+const addLike = require('../magzinesFiles/addLike');
+const addRead = require('../magzinesFiles/addRead');
 const { getHomeScreenData, getContentByType, getCategories, searchContent } = require('../magzinesFiles/homeScreen');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
@@ -90,6 +97,20 @@ router.get('/api/v1/user/magzines/:mid', getMagzineByMid);
 router.post('/api/v1/user/upload-magazine-files', uploadFiles.array('files'), uploadFolderToR2);
 // search magazines by category
 router.post('/api/v1/user/search-magazines-by-category', searchMagazinesByCategory);
+// simple search magazines by category (GET with query parameters)
+router.get('/api/v1/user/search-category', simpleSearchByCategory);
+// get recommended magazines based on views, likes, downloads, reads
+router.get('/api/v1/user/recommended-magazines', getRecommendedMagazines);
+// get recommended digests based on views, likes, downloads, reads
+router.get('/api/v1/user/recommended-digests', getRecommendedDigests);
+// get recommended articles based on views, likes, downloads, reads
+router.get('/api/v1/user/recommended-articles', getRecommendedArticles);
+// add view to magazine/article/digest
+router.post('/api/v1/user/add-view', addView);
+// add/remove like to magazine/article/digest (toggle)
+router.post('/api/v1/user/add-like', addLike);
+// add read to magazine/article/digest with duration tracking
+router.post('/api/v1/user/add-read', addRead);
 
 // Enhanced Home Screen APIs
 router.get('/api/v1/user/home', getHomeScreenData);
