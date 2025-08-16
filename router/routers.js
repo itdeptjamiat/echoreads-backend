@@ -162,11 +162,12 @@ router.get('/api/v1/admin/rating-analytics', verifyAdmin, getRatingAnalytics);
 router.get('/api/v1/admin/all-reviews', verifyAdmin, getAllReviews);
 
 // Feedback management routes
-router.post('/api/v1/user/feedback', createFeedback);
+router.post('/api/v1/user/bug-report', createFeedback);
+
 // router.get('/api/v1/user/feedback/email/:email', getUserFeedback);
-router.get('/api/v1/user/feedback/user/:userId', getUserFeedback);
+router.get('/api/v1/user/bug-report/user/:userId', getUserFeedback);
 
 // Admin feedback management routes
-router.get('/api/v1/admin/feedback', verifyAdmin, getAllFeedback);
+router.get('/api/v1/admin/bug-report', verifyAdmin, getAllFeedback);
 
 module.exports = router;
