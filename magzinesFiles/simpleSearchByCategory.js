@@ -1,7 +1,7 @@
 const Magzines = require('../models/magzinesSchema');
 
 /**
- * Simple search magazines by category
+ * Simple search magazines by keyword
  * GET /api/v1/user/search-category?category=sports
  */
 const simpleSearchByCategory = async (req, res) => {
@@ -16,7 +16,7 @@ const simpleSearchByCategory = async (req, res) => {
             });
         }
 
-        // Search for magazines by category
+        // Search magazines by keyword
         const magazines = await Magzines.find({
             category: { $regex: category, $options: 'i' },
             isActive: true

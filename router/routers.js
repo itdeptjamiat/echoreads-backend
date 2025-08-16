@@ -19,6 +19,7 @@ const getRecommendedArticles = require('../magzinesFiles/getRecommendedArticles'
 const addView = require('../magzinesFiles/addView');
 const addLike = require('../magzinesFiles/addLike');
 const addRead = require('../magzinesFiles/addRead');
+const getUserViewingLimits = require('../magzinesFiles/getUserViewingLimits');
 const { getHomeScreenData, getContentByType, getCategories, searchContent } = require('../magzinesFiles/homeScreen');
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
@@ -111,6 +112,8 @@ router.post('/api/v1/user/add-view', addView);
 router.post('/api/v1/user/add-like', addLike);
 // add read to magazine/article/digest with duration tracking
 router.post('/api/v1/user/add-read', addRead);
+// get user's viewing limits and current usage
+router.get('/api/v1/user/viewing-limits/:userId', getUserViewingLimits);
 
 // Enhanced Home Screen APIs
 router.get('/api/v1/user/home', getHomeScreenData);
