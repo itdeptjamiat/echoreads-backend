@@ -14,7 +14,7 @@ function isValidEmail(email) {
 
 const createFeedback = async (req, res) => {
     try {
-        const { name, email, description, image, rating, category, userId } = req.body;
+        const { name, email, description, image, userId } = req.body;
 
         // Required field validation
         if (isEmpty(name)) {
@@ -62,27 +62,7 @@ const createFeedback = async (req, res) => {
             });
         }
 
-        // Rating validation (if provided)
-        if (rating !== undefined && rating !== null) {
-            if (isNaN(rating) || rating < 1 || rating > 5) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Rating must be a number between 1 and 5'
-                });
-            }
-        }
-
-        // Category validation (if provided)
-        const validCategories = ['bug_report', 'feature_request', 'general_feedback', 'complaint', 'suggestion', 'other'];
-        if (category && !validCategories.includes(category)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid category. Valid categories are: ' + validCategories.join(', ')
-            });
-        }
-
-        // If userId is provided, verify user exists
-        let userExists = false;
+        // If userId is provided, verify user exists (optional validation)
         if (userId) {
             const user = await Account.findOne({ uid: userId });
             if (!user) {
@@ -91,7 +71,6 @@ const createFeedback = async (req, res) => {
                     message: 'User not found'
                 });
             }
-            userExists = true;
         }
 
         // Create feedback object
@@ -100,8 +79,6 @@ const createFeedback = async (req, res) => {
             email: email.trim().toLowerCase(),
             description: description.trim(),
             image: image || null,
-            rating: rating || null,
-            category: category || 'general_feedback',
             userId: userId || null
         };
 
@@ -119,9 +96,9 @@ const createFeedback = async (req, res) => {
                 email: newFeedback.email,
                 description: newFeedback.description,
                 image: newFeedback.image,
-                rating: newFeedback.rating,
-                category: newFeedback.category,
+                userId: newFeedback.userId,
                 status: newFeedback.status,
+                isPublic: newFeedback.isPublic,
                 createdAt: newFeedback.createdAt
             }
         });
