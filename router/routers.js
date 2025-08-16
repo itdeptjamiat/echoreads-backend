@@ -16,7 +16,7 @@ const { getHomeScreenData, getContentByType, getCategories, searchContent } = re
 const deleteMagazin = require('../admin/deleteMagzin');
 const updateMagazin = require('../admin/updateMagzin');
 const changeProfileImg = require('../userProfile/changeProfileImg');
-const { updateUserProfilePic, upload } = require('../userProfile/getUserProfilefromApp');
+const { updateUserProfilePic, upload: uploadProfilePic } = require('../userProfile/getUserProfilefromApp');
 const { uploadFolderToR2, upload: uploadFiles } = require('../magzinesFiles/uploadeFolderInR2');
 
 // Rating management imports
@@ -57,7 +57,7 @@ const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = 
 
 // Feedback management imports
 const createFeedback = require('../feedback/createFeedback');
-const { createFeedbackWithImage, upload } = require('../feedback/createFeedbackWithImage');
+const { createFeedbackWithImage, upload: uploadFeedbackImage } = require('../feedback/createFeedbackWithImage');
 const getAllFeedback = require('../feedback/getAllFeedback');
 const getUserFeedback = require('../feedback/getUserFeedback');
 
@@ -79,7 +79,7 @@ router.put('/api/v1/user/profile/:uid', updateUserProfile);
 
 // update Profile img
 router.put('/api/v1/user/change-profile-img', changeProfileImg);
-router.post('/api/v1/user/update-profile-img/:uid', upload.single('profileImage'), updateUserProfilePic);
+router.post('/api/v1/user/update-profile-img/:uid', uploadProfilePic.single('profileImage'), updateUserProfilePic);
 
 // get all magzines
 router.get('/api/v1/user/magzines', getAllMagzines);
@@ -164,7 +164,7 @@ router.get('/api/v1/admin/all-reviews', verifyAdmin, getAllReviews);
 
 // Feedback management routes
 router.post('/api/v1/user/bug-report', createFeedback);
-router.post('/api/v1/user/bug-report-with-image', upload.single('image'), createFeedbackWithImage);
+router.post('/api/v1/user/bug-report-with-image', uploadFeedbackImage.single('image'), createFeedbackWithImage);
 
 // router.get('/api/v1/user/feedback/email/:email', getUserFeedback);
 router.get('/api/v1/user/bug-report/user/:userId', getUserFeedback);
