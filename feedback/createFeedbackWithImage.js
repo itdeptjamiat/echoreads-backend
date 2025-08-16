@@ -43,7 +43,7 @@ function isValidEmail(email) {
 
 const createFeedbackWithImage = async (req, res) => {
     try {
-        const { name, email, description, rating, category, userId } = req.body;
+        const { name, email, description, userId } = req.body;
 
         // Required field validation
         if (isEmpty(name)) {
@@ -88,25 +88,6 @@ const createFeedbackWithImage = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: 'Description must be at least 10 characters long'
-            });
-        }
-
-        // Rating validation (if provided)
-        if (rating !== undefined && rating !== null) {
-            if (isNaN(rating) || rating < 1 || rating > 5) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Rating must be a number between 1 and 5'
-                });
-            }
-        }
-
-        // Category validation (if provided)
-        const validCategories = ['bug_report', 'feature_request', 'general_feedback', 'complaint', 'suggestion', 'other'];
-        if (category && !validCategories.includes(category)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid category. Valid categories are: ' + validCategories.join(', ')
             });
         }
 
@@ -166,8 +147,6 @@ const createFeedbackWithImage = async (req, res) => {
             email: email.trim().toLowerCase(),
             description: description.trim(),
             image: imageUrl,
-            rating: rating || null,
-            category: category || 'general_feedback',
             userId: userId || null
         };
 
@@ -185,9 +164,9 @@ const createFeedbackWithImage = async (req, res) => {
                 email: newFeedback.email,
                 description: newFeedback.description,
                 image: newFeedback.image,
-                rating: newFeedback.rating,
-                category: newFeedback.category,
+                userId: newFeedback.userId,
                 status: newFeedback.status,
+                isPublic: newFeedback.isPublic,
                 createdAt: newFeedback.createdAt
             }
         });
