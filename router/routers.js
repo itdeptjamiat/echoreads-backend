@@ -57,6 +57,7 @@ const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = 
 
 // Feedback management imports
 const createFeedback = require('../feedback/createFeedback');
+const { createFeedbackWithImage, upload } = require('../feedback/createFeedbackWithImage');
 const getAllFeedback = require('../feedback/getAllFeedback');
 const getUserFeedback = require('../feedback/getUserFeedback');
 
@@ -163,6 +164,7 @@ router.get('/api/v1/admin/all-reviews', verifyAdmin, getAllReviews);
 
 // Feedback management routes
 router.post('/api/v1/user/bug-report', createFeedback);
+router.post('/api/v1/user/bug-report-with-image', upload.single('image'), createFeedbackWithImage);
 
 // router.get('/api/v1/user/feedback/email/:email', getUserFeedback);
 router.get('/api/v1/user/bug-report/user/:userId', getUserFeedback);
