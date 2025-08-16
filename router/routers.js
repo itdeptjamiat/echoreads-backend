@@ -55,6 +55,11 @@ const { getExpiryManagement, triggerAutoExpiryCheck, getExpiringSoonUsers } = re
 const triggerAutoExpiry = require('../autoPlanManagement/autoExpiryRoute');
 const { getSchedulerStatusRoute, triggerDailyCheckRoute, runDailyCheckRoute } = require('../autoPlanManagement/schedulerRoutes');
 
+// Feedback management imports
+const createFeedback = require('../feedback/createFeedback');
+const getAllFeedback = require('../feedback/getAllFeedback');
+const getUserFeedback = require('../feedback/getUserFeedback');
+
 // account login
 router.post('/api/v1/user/signup', signup);
 router.post('/api/v1/user/login', login);
@@ -156,5 +161,12 @@ router.delete('/api/v1/admin/delete-review', verifyAdmin, deleteReview);
 router.get('/api/v1/admin/rating-analytics', verifyAdmin, getRatingAnalytics);
 router.get('/api/v1/admin/all-reviews', verifyAdmin, getAllReviews);
 
+// Feedback management routes
+router.post('/api/v1/user/feedback', createFeedback);
+// router.get('/api/v1/user/feedback/email/:email', getUserFeedback);
+router.get('/api/v1/user/feedback/user/:userId', getUserFeedback);
+
+// Admin feedback management routes
+router.get('/api/v1/admin/feedback', verifyAdmin, getAllFeedback);
 
 module.exports = router;
